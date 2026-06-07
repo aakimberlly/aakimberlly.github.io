@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Argos Energia — Case Study · Kimberlly Araújo Alencar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        orange: '#E87525',
+        'orange-dim': '#a0531a',
+        dark: '#0b0b0b',
+        'dark-2': '#141414',
+        'dark-3': '#1e1e1e',
+        'dark-4': '#282828',
+        'dark-5': '#333333',
+        stone: '#f4f2ed',
+        'stone-2': '#eae8e3',
+        'stone-3': '#d6d3cc',
+        muted: '#888880',
+        'muted-2': '#555550',
+      },
+      fontFamily: {
+        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+      },
+      fontSize: {
+        '2xs': ['10px', '14px'],
+        'xs': ['12px', '16px'],
+      },
+    }
+  }
+}
+</script>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: #0b0b0b; color: #f4f2ed; margin: 0; padding: 0; }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-inter { font-family: 'Inter', sans-serif; }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 52px;
+    background: rgba(11,11,11,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(232,117,37,0.12);
+  }
+  .nav-dot { width: 6px; height: 6px; background: #E87525; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
+  .nav-link { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0.06em; color: rgba(244,242,237,0.4); text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: #E87525; }
+
+  /* Label / eyebrow */
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: #E87525;
+  }
+
+  /* Section divider line */
+  .section-line {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, #E87525 0%, rgba(232,117,37,0.15) 40%, transparent 100%);
+  }
+
+  /* Image frames */
+  .img-border {
+    border: 1px solid rgba(232,117,37,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* Step number */
+  .step-index {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: #E87525;
+    letter-spacing: 0.1em;
+    line-height: 1;
+  }
+
+  /* Before/after split */
+  .ba-before { background: #141414; border-left: 2px solid #333; }
+  .ba-after  { background: #1a1a1a; border-left: 2px solid #E87525; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hero big title */
+  .hero-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    font-size: clamp(52px, 9vw, 112px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: #f4f2ed;
+  }
+  .hero-title .accent { color: #E87525; }
+
+  /* Problem card */
+  .prob-card {
+    padding: 1.25rem 1.4rem;
+    background: #141414;
+    border-top: 2px solid #E87525;
+    border-radius: 2px;
+  }
+  .prob-card h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 700;
+    color: #f4f2ed; margin-bottom: 6px;
+  }
+  .prob-card p {
+    font-size: 12px; font-weight: 300;
+    color: #888880; line-height: 1.6;
+  }
+
+  /* Outcome card */
+  .out-card {
+    padding: 1.5rem;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 4px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .out-card:hover {
+    border-color: rgba(232,117,37,0.3);
+    background: #161616;
+  }
+  .out-num {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 32px; font-weight: 800;
+    color: #E87525; line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  /* Pill tags */
+  .tag-pill {
+    display: inline-block;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 4px 12px;
+    border: 1px solid rgba(244,242,237,0.12);
+    border-radius: 100px;
+    color: rgba(244,242,237,0.5);
+  }
+
+  /* Tool tag */
+  .tool-tag {
+    font-size: 11px; font-weight: 400;
+    padding: 5px 14px;
+    border: 1px solid #2a2a2a;
+    border-radius: 100px;
+    color: #666;
+    background: #111;
+    display: inline-block;
+  }
+
+  /* footer */
+  footer {
+    background: #0b0b0b;
+    border-top: 1px solid rgba(232,117,37,0.12);
+    padding: 2.5rem 2.5rem;
+  }
+
+  /* Large section counter */
+  .section-counter {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px; font-weight: 700;
+    color: rgba(232,117,37,0.5);
+    letter-spacing: 0.2em;
+  }
+
+  /* Horizontal rule orange */
+  .hr-orange {
+    height: 1px;
+    background: rgba(232,117,37,0.2);
+    border: none;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 1.25rem; }
+    .hero-title { font-size: clamp(44px, 12vw, 72px); }
+    footer { padding: 2rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div style="display:flex;align-items:center;">
+    <div class="nav-dot"></div>
+    <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;letter-spacing:-0.01em;">Argos <span style="color:#E87525;">Energia</span></span>
+    <span style="font-size:11px;color:#444;margin-left:12px;font-weight:300;">— Case Study</span>
+  </div>
+  <div style="display:flex;gap:2rem;">
+    <a href="#diagnostico" class="nav-link">Diagnóstico</a>
+    <a href="#processo" class="nav-link">Processo</a>
+    <a href="#decisoes" class="nav-link">Decisões</a>
+    <a href="#resultados" class="nav-link">Resultados</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 2.5rem 4rem;padding-top:52px;position:relative;overflow:hidden;">
+
+  <!-- Background grid lines -->
+  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+    <div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:rgba(232,117,37,0.04);"></div>
+    <div style="position:absolute;top:0;right:25%;width:1px;height:100%;background:rgba(244,242,237,0.03);"></div>
+    <div style="position:absolute;bottom:30%;left:0;right:0;height:1px;background:rgba(244,242,237,0.03);"></div>
+  </div>
+
+  <!-- Eyebrow row -->
+  <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:2.5rem;" class="reveal">
+    <span class="eyebrow">Estudo de Caso</span>
+    <div style="flex:1;height:1px;background:rgba(232,117,37,0.15);max-width:80px;"></div>
+    <span class="eyebrow" style="color:rgba(244,242,237,0.3);">UX / UI · Redesign · 2026</span>
+  </div>
+
+  <!-- Main title -->
+  <div class="reveal" style="transition-delay:0.1s;">
+    <h1 class="hero-title">Argos<br><span class="accent">Energia</span></h1>
+  </div>
+
+  <!-- Bottom row: desc + meta -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:3rem;align-items:end;" class="reveal" style="transition-delay:0.2s;">
+    <p style="font-family:'Inter',sans-serif;font-size:15px;font-weight:300;color:rgba(244,242,237,0.5);line-height:1.75;max-width:420px;">
+      Reestruturação completa da presença digital de uma empresa de engenharia elétrica — desde a análise heurística do site existente até o design de alta fidelidade e implementação em HTML/CSS.
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#1e1e1e;border:1px solid #1e1e1e;border-radius:4px;overflow:hidden;">
+      <div style="background:#111;padding:1rem 1.2rem;">
+        <p style="font-size:9px;letter-spacing:0.14em;color:#555;margin-bottom:4px;font-family:'Inter',sans-serif;text-transform:uppercase;">Tipo</p>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:#f4f2ed;">Redesign de site</p>
+      </div>
+      <div style="background:#111;padding:1rem 1.2rem;">
+        <p style="font-size:9px;letter-spacing:0.14em;color:#555;margin-bottom:4px;font-family:'Inter',sans-serif;text-transform:uppercase;">Cliente</p>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:#f4f2ed;">Argos Energia</p>
+      </div>
+      <div style="background:#111;padding:1rem 1.2rem;">
+        <p style="font-size:9px;letter-spacing:0.14em;color:#555;margin-bottom:4px;font-family:'Inter',sans-serif;text-transform:uppercase;">Local</p>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:#f4f2ed;">São Francisco do Sul, SC</p>
+      </div>
+      <div style="background:#111;padding:1rem 1.2rem;">
+        <p style="font-size:9px;letter-spacing:0.14em;color:#555;margin-bottom:4px;font-family:'Inter',sans-serif;text-transform:uppercase;">Ferramentas</p>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:#f4f2ed;">Figma + HTML/CSS</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pills -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:2.5rem;" class="reveal" style="transition-delay:0.3s;">
+    <span class="tag-pill">UX Research</span>
+    <span class="tag-pill">Identidade Visual</span>
+    <span class="tag-pill">Wireframe</span>
+    <span class="tag-pill">UI Design</span>
+    <span class="tag-pill">Figma</span>
+    <span class="tag-pill">HTML / CSS</span>
+  </div>
+
+  <!-- Scroll hint -->
+  <div style="position:absolute;right:2.5rem;bottom:3rem;display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <span style="font-size:9px;letter-spacing:0.2em;color:#444;writing-mode:vertical-lr;font-family:'Inter',sans-serif;">SCROLL</span>
+    <div style="width:1px;height:48px;background:linear-gradient(to bottom,#E87525,transparent);"></div>
+  </div>
+</section>
+
+<!-- CONTEXT -->
+<section style="background:#0f0f0f;padding:6rem 2.5rem;border-top:1px solid #1a1a1a;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;align-items:start;" class="reveal">
+      <div>
+        <span class="section-counter">01</span>
+        <div style="height:1px;background:rgba(232,117,37,0.25);margin:10px 0 16px;"></div>
+        <span class="eyebrow">Contexto</span>
+      </div>
+      <div>
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;color:#f4f2ed;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1.5rem;">O projeto</h2>
+        <p style="font-size:15px;font-weight:300;color:rgba(244,242,237,0.55);line-height:1.8;margin-bottom:1rem;">A <span style="color:#f4f2ed;font-weight:400;">Argos Energia</span> é uma empresa de engenharia elétrica que atua em projetos e execução de sistemas de média e baixa tensão para indústrias, comércios e órgãos públicos em Santa Catarina.</p>
+        <p style="font-size:15px;font-weight:300;color:rgba(244,242,237,0.55);line-height:1.8;">Apesar da solidez técnica, o site existente apresentava sérios problemas de usabilidade, hierarquia visual e conversão — o ponto de partida para este redesign completo desenvolvido como projeto de portfólio.</p>
+      </div>
+    </div>
+
+    <!-- Design system image -->
+    <div style="margin-top:4rem;" class="reveal">
+      <div class="img-border">
+      <img src="project-overview.png" alt=""></div>
+      <p style="font-family:'Inter',sans-serif;font-size:11px;color:#555;margin-top:10px;letter-spacing:0.04em;">Design system desenvolvido no Figma — paleta, tipografia Plus Jakarta Sans e componentes base.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIAGNÓSTICO -->
+<section id="diagnostico" style="background:#0b0b0b;padding:6rem 2.5rem;border-top:1px solid #1a1a1a;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;align-items:start;margin-bottom:3rem;" class="reveal">
+      <div>
+        <span class="section-counter">02</span>
+        <div style="height:1px;background:rgba(232,117,37,0.25);margin:10px 0 16px;"></div>
+        <span class="eyebrow">Diagnóstico</span>
+      </div>
+      <div>
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;color:#f4f2ed;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1rem;">Problemas encontrados<br>no site anterior</h2>
+        <p style="font-size:14px;font-weight:300;color:rgba(244,242,237,0.45);line-height:1.7;">A análise heurística revelou falhas críticas em navegação, hierarquia visual e conversão.</p>
+      </div>
+    </div>
+
+    <!-- Diag image -->
+    <div class="img-border reveal" style="margin-bottom:3rem;">
+<img src="site-argos.png" alt="">    </div>
+
+    <!-- Problems grid -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;" class="reveal">
+      <div class="prob-card" style="transition-delay:0s;">
+        <h4>Sem hierarquia visual</h4>
+        <p>Títulos, texto e botões competiam sem ordem de leitura. Nenhum elemento se destacava como ponto de entrada.</p>
+      </div>
+      <div class="prob-card" style="transition-delay:0.05s;">
+        <h4>Navegação confusa</h4>
+        <p>Menu com itens duplicados e estrutura ilógica. O usuário não sabia onde estava ou para onde ir.</p>
+      </div>
+      <div class="prob-card" style="transition-delay:0.1s;">
+        <h4>Ausência de CTAs</h4>
+        <p>Nenhum call-to-action claro. Contato apenas por ícone no rodapé, difícil de encontrar.</p>
+      </div>
+      <div class="prob-card" style="transition-delay:0.15s;">
+        <h4>Lista de serviços excessiva</h4>
+        <p>Mais de 20 serviços em texto corrido, sem categorização visual ou imagens de referência.</p>
+      </div>
+      <div class="prob-card" style="transition-delay:0.2s;">
+        <h4>Layout desatualizado</h4>
+        <p>Template WordPress genérico sem identidade própria da marca.</p>
+      </div>
+      <div class="prob-card" style="transition-delay:0.25s;">
+        <h4>Seção de clientes fraca</h4>
+        <p>Logos inconsistentes em carrossel sem contexto textual ou credibilidade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESSO -->
+<section id="processo" style="background:#0f0f0f;padding:6rem 2.5rem;border-top:1px solid #1a1a1a;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;align-items:start;margin-bottom:4rem;" class="reveal">
+      <div>
+        <span class="section-counter">03</span>
+        <div style="height:1px;background:rgba(232,117,37,0.25);margin:10px 0 16px;"></div>
+        <span class="eyebrow">Processo</span>
+      </div>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;color:#f4f2ed;line-height:1.1;letter-spacing:-0.02em;">Etapas do redesign</h2>
+    </div>
+
+    <!-- Steps -->
+    <div style="display:flex;flex-direction:column;" class="reveal">
+      
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;padding:1.75rem 0;border-top:1px solid #1e1e1e;align-items:start;">
+        <div style="display:flex;align-items:center;gap:12px;padding-top:2px;">
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#E87525;letter-spacing:0.1em;">01</span>
+          <div style="flex:1;height:1px;background:#1e1e1e;"></div>
+        </div>
+        <div>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Análise heurística</p>
+          <p style="font-size:13px;font-weight:300;color:rgba(244,242,237,0.45);line-height:1.65;">Levantamento sistemático dos problemas com base nas heurísticas de Nielsen: visibilidade do status, consistência e padrões, reconhecimento vs. memorização e prevenção de erros.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;padding:1.75rem 0;border-top:1px solid #1e1e1e;align-items:start;">
+        <div style="display:flex;align-items:center;gap:12px;padding-top:2px;">
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#E87525;letter-spacing:0.1em;">02</span>
+          <div style="flex:1;height:1px;background:#1e1e1e;"></div>
+        </div>
+        <div>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Pesquisa e moodboard</p>
+          <p style="font-size:13px;font-weight:300;color:rgba(244,242,237,0.45);line-height:1.65;">Coleta de referências visuais do setor industrial e de energia. Definição da paleta escura com acento laranja, tipografia Plus Jakarta Sans e fotografia de impacto para o hero.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;padding:1.75rem 0;border-top:1px solid #1e1e1e;align-items:start;">
+        <div style="display:flex;align-items:center;gap:12px;padding-top:2px;">
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#E87525;letter-spacing:0.1em;">03</span>
+          <div style="flex:1;height:1px;background:#1e1e1e;"></div>
+        </div>
+        <div>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Arquitetura da informação</p>
+          <p style="font-size:13px;font-weight:300;color:rgba(244,242,237,0.45);line-height:1.65;">Reestruturação das seções: Hero → Sobre → Serviços → Clientes → Contato. Redução dos serviços para 8 categorias visuais com imagem, título e descrição.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;padding:1.75rem 0;border-top:1px solid #1e1e1e;align-items:start;">
+        <div style="display:flex;align-items:center;gap:12px;padding-top:2px;">
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#E87525;letter-spacing:0.1em;">04</span>
+          <div style="flex:1;height:1px;background:#1e1e1e;"></div>
+        </div>
+        <div>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Wireframe desktop e mobile</p>
+          <p style="font-size:13px;font-weight:300;color:rgba(244,242,237,0.45);line-height:1.65;">Protótipos de baixa fidelidade para ambas as resoluções, validando hierarquia e fluxo de leitura antes de avançar para o design visual.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;padding:1.75rem 0;border-top:1px solid #1e1e1e;align-items:start;">
+        <div style="display:flex;align-items:center;gap:12px;padding-top:2px;">
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#E87525;letter-spacing:0.1em;">05</span>
+          <div style="flex:1;height:1px;background:#1e1e1e;"></div>
+        </div>
+        <div>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Design de alta fidelidade no Figma</p>
+          <p style="font-size:13px;font-weight:300;color:rgba(244,242,237,0.45);line-height:1.65;">Desenvolvimento do design system com paleta, tipografia, componentes reutilizáveis e aplicação nos layouts completos de desktop e mobile.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;padding:1.75rem 0;border-top:1px solid #1e1e1e;align-items:start;">
+        <div style="display:flex;align-items:center;gap:12px;padding-top:2px;">
+          <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:700;color:#E87525;letter-spacing:0.1em;">06</span>
+          <div style="flex:1;height:1px;background:#1e1e1e;"></div>
+        </div>
+        <div>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Implementação em HTML/CSS</p>
+          <p style="font-size:13px;font-weight:300;color:rgba(244,242,237,0.45);line-height:1.65;">Conversão do design para código, iniciando pelo footer. Foco em responsividade, acessibilidade e fidelidade ao design aprovado no Figma.</p>
+        </div>
+      </div>
+      <div style="border-top:1px solid #1e1e1e;"></div>
+    </div>
+
+    <!-- Wireframes -->
+    <div style="margin-top:4rem;" class="reveal">
+      <span class="eyebrow" style="display:block;margin-bottom:1.5rem;">Wireframes — Desktop e Mobile</span>
+      <div style="display:grid;grid-template-columns:62fr 38fr;gap:3px;background:#1a1a1a;border-radius:4px;overflow:hidden;">
+        <div style="background:#141414;padding:1.5rem;">
+          <p style="font-size:10px;letter-spacing:0.12em;color:#444;font-family:'Inter',sans-serif;margin-bottom:1rem;text-transform:uppercase;">Desktop</p>
+<img src="wireframe-desktop.png" alt="">        </div>
+        <div style="background:#141414;padding:1.5rem;">
+          <p style="font-size:10px;letter-spacing:0.12em;color:#444;font-family:'Inter',sans-serif;margin-bottom:1rem;text-transform:uppercase;">Mobile</p>
+<img src="wireframe-mobile.png" alt="">        </div>
+      </div>
+      <p style="font-size:11px;color:#444;margin-top:10px;font-family:'Inter',sans-serif;letter-spacing:0.03em;">Wireframes de baixa fidelidade — validando estrutura e hierarquia antes do design visual.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DECISÕES -->
+<section id="decisoes" style="background:#0b0b0b;padding:6rem 2.5rem;border-top:1px solid #1a1a1a;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;align-items:start;margin-bottom:4rem;" class="reveal">
+      <div>
+        <span class="section-counter">04</span>
+        <div style="height:1px;background:rgba(232,117,37,0.25);margin:10px 0 16px;"></div>
+        <span class="eyebrow">Decisões</span>
+      </div>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;color:#f4f2ed;line-height:1.1;letter-spacing:-0.02em;">Antes × Depois</h2>
+    </div>
+
+    <!-- Before/after cards -->
+    <div style="display:flex;flex-direction:column;gap:3px;" class="reveal">
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+        <div class="ba-before" style="padding:1.5rem 1.75rem;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:0.16em;color:#444;font-family:'Inter',sans-serif;text-transform:uppercase;display:block;margin-bottom:10px;">Antes</span>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:8px;">Identidade visual</p>
+          <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Template WordPress genérico, fundo branco, logo pequena, sem consistência tipográfica.</p>
+        </div>
+        <div class="ba-after" style="padding:1.5rem 1.75rem;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:0.16em;color:#E87525;font-family:'Inter',sans-serif;text-transform:uppercase;display:block;margin-bottom:10px;">Depois</span>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:8px;">Identidade visual</p>
+          <p style="font-size:12px;font-weight:300;color:#888;line-height:1.6;">Fundo escuro (#0d0d0d), laranja #E87525, logo em destaque, tipografia Plus Jakarta Sans com hierarquia definida.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+        <div class="ba-before" style="padding:1.5rem 1.75rem;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:0.16em;color:#444;font-family:'Inter',sans-serif;text-transform:uppercase;display:block;margin-bottom:10px;">Antes</span>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:8px;">Serviços</p>
+          <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Lista de texto com mais de 20 itens sem imagens, categorias ou organização visual.</p>
+        </div>
+        <div class="ba-after" style="padding:1.5rem 1.75rem;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:0.16em;color:#E87525;font-family:'Inter',sans-serif;text-transform:uppercase;display:block;margin-bottom:10px;">Depois</span>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:8px;">Serviços</p>
+          <p style="font-size:12px;font-weight:300;color:#888;line-height:1.6;">8 cards visuais em grid 2×4 com fotografia real, título e descrição curta para cada serviço.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+        <div class="ba-before" style="padding:1.5rem 1.75rem;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:0.16em;color:#444;font-family:'Inter',sans-serif;text-transform:uppercase;display:block;margin-bottom:10px;">Antes</span>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:8px;">Conversão</p>
+          <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Sem botões de ação claros. Contato apenas por ícone no rodapé, difícil de encontrar.</p>
+        </div>
+        <div class="ba-after" style="padding:1.5rem 1.75rem;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:0.16em;color:#E87525;font-family:'Inter',sans-serif;text-transform:uppercase;display:block;margin-bottom:10px;">Depois</span>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:8px;">Conversão</p>
+          <p style="font-size:12px;font-weight:300;color:#888;line-height:1.6;">CTAs "Fale Conosco" e "Ver Serviços" no hero. Botão WhatsApp flutuante. Formulário completo na seção de contato.</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+        <div class="ba-before" style="padding:1.5rem 1.75rem;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:0.16em;color:#444;font-family:'Inter',sans-serif;text-transform:uppercase;display:block;margin-bottom:10px;">Antes</span>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:8px;">Seção de clientes</p>
+          <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Logos em tamanhos inconsistentes em carrossel sem contexto textual.</p>
+        </div>
+        <div class="ba-after" style="padding:1.5rem 1.75rem;">
+          <span style="font-size:9px;font-weight:500;letter-spacing:0.16em;color:#E87525;font-family:'Inter',sans-serif;text-transform:uppercase;display:block;margin-bottom:10px;">Depois</span>
+          <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:8px;">Seção de clientes</p>
+          <p style="font-size:12px;font-weight:300;color:#888;line-height:1.6;">Grid organizado com logos padronizadas, fundo escuro e texto introdutório que reforça credibilidade.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final design -->
+    <div style="margin-top:4rem;" class="reveal">
+      <span class="eyebrow" style="display:block;margin-bottom:1.5rem;">Resultado visual — Desktop</span>
+      <div class="img-border">
+<img src="desktop.png" alt="">      </div>
+      <p style="font-size:11px;color:#444;margin-top:10px;font-family:'Inter',sans-serif;letter-spacing:0.03em;">Design de alta fidelidade — home page completa no Figma com dark mode, cards de serviços, clientes e contato.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTADOS -->
+<section id="resultados" style="background:#0f0f0f;padding:6rem 2.5rem;border-top:1px solid #1a1a1a;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:4rem;align-items:start;margin-bottom:4rem;" class="reveal">
+      <div>
+        <span class="section-counter">05</span>
+        <div style="height:1px;background:rgba(232,117,37,0.25);margin:10px 0 16px;"></div>
+        <span class="eyebrow">Resultados</span>
+      </div>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;color:#f4f2ed;line-height:1.1;letter-spacing:-0.02em;">Impacto do redesign</h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:5rem;" class="reveal">
+      <div class="out-card">
+        <div class="out-num">01</div>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Hierarquia visual clara</p>
+        <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Propósito da empresa identificável em menos de 5 segundos.</p>
+      </div>
+      <div class="out-card">
+        <div class="out-num">02</div>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Responsividade real</p>
+        <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Wireframe dedicado ao mobile com componentes para toque.</p>
+      </div>
+      <div class="out-card">
+        <div class="out-num">03</div>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Maior conversão</p>
+        <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Múltiplos pontos de contato — formulário, WhatsApp e CTA no hero.</p>
+      </div>
+      <div class="out-card">
+        <div class="out-num">04</div>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Design system escalável</p>
+        <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Componentes reutilizáveis facilitam manutenção e evolução futura.</p>
+      </div>
+      <div class="out-card">
+        <div class="out-num">05</div>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Credibilidade reforçada</p>
+        <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Números de impacto e clientes organizados constroem confiança.</p>
+      </div>
+      <div class="out-card">
+        <div class="out-num">06</div>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#f4f2ed;margin-bottom:6px;">Identidade consistente</p>
+        <p style="font-size:12px;font-weight:300;color:#666;line-height:1.6;">Paleta, tipografia e tom visual unificados em todos os pontos.</p>
+      </div>
+    </div>
+
+    <!-- Tools -->
+    <div style="border-top:1px solid #1a1a1a;padding-top:3rem;" class="reveal">
+      <span class="eyebrow" style="display:block;margin-bottom:1.25rem;">Ferramentas utilizadas</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:3.5rem;">
+        <span class="tool-tag">Figma</span><span class="tool-tag">HTML</span><span class="tool-tag">CSS</span><span class="tool-tag">Tailwind CSS</span><span class="tool-tag">Plus Jakarta Sans</span><span class="tool-tag">Inter</span><span class="tool-tag">Análise Heurística</span><span class="tool-tag">Wireframe</span><span class="tool-tag">Design System</span><span class="tool-tag">Adobe Photoshop</span><span class="tool-tag">Illustrator</span>
+      </div>
+
+      <!-- Reflection -->
+      <div style="background:#111;border:1px solid #1e1e1e;border-left:2px solid #E87525;padding:2.5rem 3rem;border-radius:4px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border:1px solid rgba(232,117,37,0.06);border-radius:50%;pointer-events:none;"></div>
+        <span class="eyebrow" style="display:block;margin-bottom:1.25rem;">Reflexão da designer</span>
+        <p style="font-size:14px;font-weight:300;color:rgba(244,242,237,0.55);line-height:1.85;margin-bottom:1rem;">Este projeto foi desenvolvido como parte do meu portfólio de UX/UI, com o objetivo de aplicar um processo de redesign completo em um caso real — do diagnóstico até o código.</p>
+        <p style="font-size:14px;font-weight:300;color:rgba(244,242,237,0.55);line-height:1.85;margin-bottom:1rem;">O maior aprendizado foi entender que um bom design vai além da estética: cada decisão visual precisa ter uma justificativa funcional. A troca da lista de serviços por cards visuais não é apenas mais bonita — ela reduz a carga cognitiva e ajuda o usuário a encontrar o que procura com menos esforço.</p>
+        <p style="font-size:13px;font-weight:300;color:rgba(244,242,237,0.3);line-height:1.75;">O projeto segue em desenvolvimento. As demais seções em HTML/CSS estão sendo implementadas progressivamente com base no design aprovado no Figma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+    <div>
+      <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;color:#f4f2ed;margin-bottom:2px;">Kimberlly Araújo Alencar</p>
+      <p style="font-size:11px;color:#444;font-family:'Inter',sans-serif;font-weight:300;">UX/UI Designer · Portfólio 2026</p>
+    </div>
+    <div style="text-align:right;">
+      <p style="font-size:11px;color:#333;font-family:'Inter',sans-serif;">Argos Energia — Estudo de Caso de Redesign</p>
+      <p style="font-size:11px;color:#2a2a2a;font-family:'Inter',sans-serif;margin-top:2px;">Joinville, SC · Brasil</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
